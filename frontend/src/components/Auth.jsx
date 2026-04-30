@@ -2,12 +2,21 @@ import React from "react";
 import { FaRobot } from "react-icons/fa6";
 import { IoSparkles } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
-
+import { signInWithPopup } from "firebase/auth";
 import { motion } from "motion/react";
+import { auth, provider } from "../utils/fireBase";
 const Auth = () => {
+  const handleGoogleAuth = async () => {
+    try {
+      const response = await signInWithPopup(auth, provider);
+      console.log(response.user.displayName);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
-      <div className="w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center  py-20">
+      <div className="w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6  py-20">
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,6 +49,7 @@ const Auth = () => {
             </span>
           </p>
           <motion.button
+            onClick={handleGoogleAuth}
             whileHover={{ opacity: 0.9, scale: 1.03 }}
             whileTap={{ opacity: 1, scale: 0.9 }}
             className="w-full bg-black text-white flex items-center justify-center gap-3 rounded-xl p-2 cursor-pointer "
