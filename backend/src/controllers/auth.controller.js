@@ -10,9 +10,9 @@ export const googleAuth = async (req, res) => {
         success: false,
       });
     }
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
     if (!user) {
-      await User.create({
+      user = await User.create({
         name,
         email,
       });
@@ -20,7 +20,7 @@ export const googleAuth = async (req, res) => {
     let token = genToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "lax",
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -28,6 +28,21 @@ export const googleAuth = async (req, res) => {
       message: "User loggedIn successfully",
       success: true,
       user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    await res.clearCookie("token");
+    return res.status(200).json({
+      message: "Loggedout successfully",
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({
