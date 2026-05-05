@@ -6,7 +6,10 @@ import { signInWithPopup } from "firebase/auth";
 import { motion } from "motion/react";
 import { auth, provider } from "../utils/fireBase";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 const Auth = () => {
+  const dispatch = useDispatch();
   const handleGoogleAuth = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
@@ -19,6 +22,7 @@ const Auth = () => {
         { name, email },
         { withCredentials: true },
       );
+      dispatch(setUserData(result.data));
       console.log(result.data);
     } catch (error) {
       console.log(error);
@@ -42,7 +46,7 @@ const Auth = () => {
               <span className="text-red-500 font-bold">IQ</span>.io
             </h2>
           </div>
-          <h1 className="text-2xl md:text-3xl  text-center font-semibold mb-4">
+          <h1 className="text-xl md:text-2xl  text-center font-semibold mb-4">
             Continue With
             <span className="inline-flex bg-green-100 text-green-600 rounded-full px-4 py-2 gap-2">
               <IoSparkles /> AI Smart Interview
