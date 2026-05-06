@@ -8,6 +8,10 @@ import { auth, provider } from "../utils/fireBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { BsRobot, BsCoin } from "react-icons/bs";
+import { HiOutlineLogout } from "react-icons/hi";
+import { FaUserAstronaut } from "react-icons/fa";
+
 const Auth = () => {
   const dispatch = useDispatch();
   const handleGoogleAuth = async () => {
