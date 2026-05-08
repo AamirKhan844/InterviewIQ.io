@@ -8,10 +8,12 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
 import axios from "axios";
+import AuthMode from "./AuthMode";
 
 const Navbar = () => {
   const [showCreditpopup, setShowCreditPopup] = useState(false);
   const [showUserpopup, setShowUserPopup] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = async () => {
@@ -35,12 +37,12 @@ const Navbar = () => {
   const { userData } = useSelector((state) => state.user);
   return (
     <>
-      <div className="bg-[#f3f3f3] flex px-2 md:px-4 py-4 md:py-6">
+      <div className="bg-[#f3f3f3] flex px-2 md:px-4 py-4 md:py-6 ">
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full max-w-6xl bg-white mx-auto rounded-2xl shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative"
+          className="w-full max-w-6xl bg-white mx-auto rounded-2xl shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative "
         >
           <div className="flex items-center gap-3 cursor-pointer">
             <div className="bg-black text-white p-2 rounded-lg">
@@ -54,6 +56,10 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => {
+                  if (!userData) {
+                    setShowAuth(true);
+                    return;
+                  }
                   setShowCreditPopup(!showCreditpopup);
                   setShowUserPopup(false);
                 }}
@@ -81,6 +87,10 @@ const Navbar = () => {
             <div className="relative">
               <motion.button
                 onClick={() => {
+                  if (!userData) {
+                    setShowAuth(true);
+                    return;
+                  }
                   setShowUserPopup(!showUserpopup);
                   setShowCreditPopup(false);
                 }}
@@ -119,6 +129,7 @@ const Navbar = () => {
             </div>
           </div>
         </motion.div>
+        {showAuth && <AuthMode onClose={() => setShowAuth(false)} />}
       </div>
     </>
   );
