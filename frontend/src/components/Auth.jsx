@@ -8,11 +8,8 @@ import { auth, provider } from "../utils/fireBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-import { BsRobot, BsCoin } from "react-icons/bs";
-import { HiOutlineLogout } from "react-icons/hi";
-import { FaUserAstronaut } from "react-icons/fa";
 
-const Auth = () => {
+const Auth = ({ isModel = false }) => {
   const dispatch = useDispatch();
   const handleGoogleAuth = async () => {
     try {
@@ -34,7 +31,9 @@ const Auth = () => {
   };
   return (
     <>
-      <div className="w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6  py-20">
+      <div
+        className={`w-full ${isModel ? "py-4" : "min-h-screen bg-[#f3f3f3] flex items-center justify-center py-20 px-6"}`}
+      >
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
