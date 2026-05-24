@@ -12,12 +12,15 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@openrouter/sdk": "^0.12.35",
+    "axios": "^1.16.1",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.0",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1"
   }
 }
