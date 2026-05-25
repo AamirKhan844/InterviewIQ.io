@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
+import interviewRoutes from "./routes/user.route.js";
 
 export const app = express();
 app.use(express.json());
@@ -26,3 +27,4 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/user/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/user/interview", interviewRoutes);
