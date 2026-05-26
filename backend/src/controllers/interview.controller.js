@@ -18,16 +18,18 @@ export const analyseResume = async (req, res) => {
     //extract text from all the pages
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
-      const content = await pdf.getTextContent();
+      const content = await page.getTextContent();
       const pageText = content.items.map((item) => item.str).join(" ");
       resumeText += pageText + "\n";
     }
+    // resumeText = resumeText.replace(/\s+/g, "").trim();
     resumeText = resumeText.replace(/\s+/g, "").trim();
     const messages = [
       {
         role: "system",
         content: `
             Extract structured data from the Resume.
+            Also return Experience. If No experience is found. Calculate the number of years user has worked in all the companies
             Return strictly JSON:
             {
             "role":"string",
@@ -43,11 +45,18 @@ export const analyseResume = async (req, res) => {
       },
     ];
     const aiResponse = await askAi(messages);
-    const parsed = JSON.parse(aiResponse);
+    const cleanResponse = aiResponse
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    console.log(cleanResponse);
+
+    const parsed = JSON.parse(cleanResponse);
     fs.unlinkSync(filePath);
     res.json({
       role: parsed.role,
-      experience: parsed.experience,
+      experience: parsed.experience || parsed.Experience,
       skills: parsed.skills,
       projects: parsed.projects,
       resumeText,

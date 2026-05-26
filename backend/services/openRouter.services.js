@@ -5,7 +5,7 @@ export const askAi = async (messsages) => {
       throw new Error("Messages Array is Empty");
     }
     const response = await axios.post(
-      "vhttps://openrouter.ai/api/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "openai/gpt-4o-mini",
         messages: messsages,

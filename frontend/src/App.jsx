@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "./redux/userSlice";
+import IntreviewPage from "./pages/IntreviewPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />}></Route>
+        <Route path="/interview" element={<IntreviewPage />}></Route>
       </Routes>
     </>
   );

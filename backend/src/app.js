@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
-import interviewRoutes from "./routes/user.route.js";
+import interviewRoutes from "./routes/interview.route.js";
 
 export const app = express();
 app.use(express.json());
