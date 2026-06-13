@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import Navbar from "./Navbar";
 const Step1Setup = ({ onStart }) => {
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const Step1Setup = ({ onStart }) => {
   };
   return (
     <>
+      <Navbar />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

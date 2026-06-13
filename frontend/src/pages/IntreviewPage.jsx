@@ -12,6 +12,7 @@ const IntreviewPage = () => {
         {step === 1 && (
           <Step1Setup
             onStart={(data) => {
+              setInterviewData(data);
               setStep(2);
             }}
           />
