@@ -317,7 +317,7 @@ export const finishInterview = async (req, res) => {
       ? totalCorrectness / totalQuestions
       : 0;
     interview.finalScore = finalScore;
-    interview.status = "completed";
+    interview.status = "Completed";
     await interview.save();
     return res.status(200).json({
       finalScore: Number(finalScore.toFixed(1)),
@@ -334,8 +334,9 @@ export const finishInterview = async (req, res) => {
       })),
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: "Internal server error",
+      message: error.message,
     });
   }
 };

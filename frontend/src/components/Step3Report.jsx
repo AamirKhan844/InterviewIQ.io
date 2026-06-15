@@ -1,7 +1,7 @@
 import React from "react";
 
 const Step3Report = ({ report }) => {
-  return <div></div>;
+  return <></>;
 };
 
 export default Step3Report;

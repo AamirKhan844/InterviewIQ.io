@@ -8,7 +8,7 @@ import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { useState, useRef } from "react";
 import { useEffect } from "react";
 import Navbar from "./Navbar";
-import { BsArrowLeft, BsSpeaker } from "react-icons/bs";
+import { BsArrowLeft, BsArrowRight, BsSpeaker } from "react-icons/bs";
 import axios from "axios";
 const Step2Interview = ({ interviewData, onFinish }) => {
   const { interviewId, questions, userName } = interviewData;
@@ -454,7 +454,7 @@ const Step2Interview = ({ interviewData, onFinish }) => {
                   onClick={handleNext}
                   className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shadow-md hover:opacity-90 transition flex items-center justify-center gap-1"
                 >
-                  Next Question <BsArrowLeft size={18} />
+                  Next Question <BsArrowRight size={18} />
                 </button>
               </motion.div>
             )}
