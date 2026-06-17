@@ -13,6 +13,7 @@ const Auth = ({ isModel = false }) => {
   const dispatch = useDispatch();
   const handleGoogleAuth = async () => {
     try {
+      console.log("API URL is", API_URL);
       const response = await signInWithPopup(auth, provider);
       // console.log(response.user.displayName);
       const User = response.user;
@@ -23,6 +24,7 @@ const Auth = ({ isModel = false }) => {
         { name, email },
         { withCredentials: true },
       );
+
       dispatch(setUserData(result.data));
       console.log(result.data);
     } catch (error) {
