@@ -2,6 +2,7 @@ import React from "react";
 import maleVideo from "../assets/Videos/male-ai.mp4";
 import femaleVideo from "../assets/Videos/female-ai.mp4";
 import { motion } from "motion/react";
+import { API_URL } from "../App/jsx";
 
 import Timer from "./Timer";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
@@ -258,7 +259,7 @@ const Step2Interview = ({ interviewData, onFinish }) => {
 
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/v1/user/interview/submit-answer",
+        `${API_URL}/api/v1/user/interview/submit-answer`,
         {
           interviewId,
           questionIndex: currentIndex,
@@ -303,7 +304,7 @@ const Step2Interview = ({ interviewData, onFinish }) => {
     setIsMicOn(false);
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/v1/user/interview/finish",
+        `${API_URL}/api/v1/user/interview/finish`,
         {
           interviewId,
         },

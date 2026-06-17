@@ -12,14 +12,14 @@ import InterviewReport from "./pages/InterviewReport";
 import Pricing from "./components/Pricing";
 
 const App = () => {
+  export const API_URL = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {
       try {
-        const result = await axios.get(
-          "http://localhost:3000/api/v1/user/current-user",
-          { withCredentials: true },
-        );
+        const result = await axios.get(`${API_URL}/api/v1/user/current-user`, {
+          withCredentials: true,
+        });
         dispatch(setUserData(result.data));
         console.log(result.data);
       } catch (error) {

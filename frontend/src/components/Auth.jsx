@@ -8,7 +8,7 @@ import { auth, provider } from "../utils/fireBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-
+import {API_URL} from "../App.jsx"
 const Auth = ({ isModel = false }) => {
   const dispatch = useDispatch();
   const handleGoogleAuth = async () => {
@@ -19,7 +19,7 @@ const Auth = ({ isModel = false }) => {
       const name = User.displayName;
       const email = User.email;
       const result = await axios.post(
-        "http://localhost:3000/api/v1/user/auth/google",
+        `${API_URL}/api/v1/user/auth/google`,
         { name, email },
         { withCredentials: true },
       );

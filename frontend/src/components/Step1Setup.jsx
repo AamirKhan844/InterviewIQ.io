@@ -10,6 +10,8 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { API_URL } from "../App";
+
 import Navbar from "./Navbar";
 const Step1Setup = ({ onStart }) => {
   const { userData } = useSelector((state) => state.user);
@@ -31,7 +33,7 @@ const Step1Setup = ({ onStart }) => {
     formData.append("resume", resumeFile);
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/v1/user/interview/resume",
+        `${API_URL}/api/v1/user/interview/resume`,
         formData,
         { withCredentials: true },
       );
@@ -51,7 +53,7 @@ const Step1Setup = ({ onStart }) => {
     setLoading(true);
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/v1/user/interview/generate-questions",
+        `${API_URL}/api/v1/user/interview/generate-questions`,
         { role, experience, mode, resumeText, projects, skills },
         { withCredentials: true },
       );

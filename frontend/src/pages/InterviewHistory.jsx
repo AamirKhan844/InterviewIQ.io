@@ -7,6 +7,7 @@ const InterviewHistory = () => {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  import { API_URL } from "../App/jsx";
 
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ const InterviewHistory = () => {
     const getMyInterview = async () => {
       try {
         const result = await axios.get(
-          "http://localhost:3000/api/v1/user/interview/interviews",
+          `${API_URL}/api/v1/user/interview/interviews`,
           {
             withCredentials: true,
           },

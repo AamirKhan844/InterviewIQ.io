@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
 import axios from "axios";
 import AuthMode from "./AuthMode";
-
+import { API_URL } from "../App";
 const Navbar = () => {
   const [showCreditpopup, setShowCreditPopup] = useState(false);
   const [showUserpopup, setShowUserPopup] = useState(false);
@@ -19,7 +19,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/user/auth/logout",
+        `${API_URL}/api/v1/user/auth/logout`,
         {},
         { withCredentials: true },
       );
