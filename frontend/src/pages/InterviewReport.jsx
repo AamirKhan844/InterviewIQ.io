@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Step3Report from "../components/Step3Report";
-import { API_URL } from "../App/jsx";
+import { API_URL } from "../App";
 
 const InterviewReport = () => {
   const { id } = useParams();

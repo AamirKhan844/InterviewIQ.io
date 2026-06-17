@@ -2,7 +2,6 @@ import React from "react";
 import maleVideo from "../assets/Videos/male-ai.mp4";
 import femaleVideo from "../assets/Videos/female-ai.mp4";
 import { motion } from "motion/react";
-import { API_URL } from "../App/jsx";
 
 import Timer from "./Timer";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import Navbar from "./Navbar";
 import { BsArrowLeft, BsArrowRight, BsSpeaker } from "react-icons/bs";
 import axios from "axios";
+import { API_URL } from "../App";
 const Step2Interview = ({ interviewData, onFinish }) => {
   const { interviewId, questions, userName } = interviewData;
   const [introPhase, setIntroPhase] = useState(true);

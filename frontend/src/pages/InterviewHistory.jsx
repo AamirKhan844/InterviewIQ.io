@@ -2,12 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../App";
 
 const InterviewHistory = () => {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  import { API_URL } from "../App/jsx";
+  // import { API_URL } from "../App/jsx";
 
   const navigate = useNavigate();
 

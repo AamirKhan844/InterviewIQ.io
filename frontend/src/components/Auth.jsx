@@ -8,7 +8,7 @@ import { auth, provider } from "../utils/fireBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-import {API_URL} from "../App.jsx"
+import { API_URL } from "../App";
 const Auth = ({ isModel = false }) => {
   const dispatch = useDispatch();
   const handleGoogleAuth = async () => {

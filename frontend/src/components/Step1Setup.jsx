@@ -10,9 +10,9 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-import { API_URL } from "../App";
 
 import Navbar from "./Navbar";
+import { API_URL } from "../App";
 const Step1Setup = ({ onStart }) => {
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
