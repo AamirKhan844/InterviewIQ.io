@@ -10,9 +10,9 @@ import IntreviewPage from "./pages/IntreviewPage";
 import InterviewHistory from "./pages/InterviewHistory";
 import InterviewReport from "./pages/InterviewReport";
 import Pricing from "./components/Pricing";
+export const API_URL = import.meta.env.VITE_API_URL;
 
 const App = () => {
-  export const API_URL = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {
