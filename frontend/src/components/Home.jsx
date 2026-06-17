@@ -86,6 +86,7 @@ const Home = () => {
                   Start Interview
                 </motion.button>
                 <motion.button
+                  onClick={() => navigate("/history")}
                   whileHover={{ opacity: 0.9, scale: 1.03 }}
                   whileTap={{ opacity: 1.02, scale: 0.9 }}
                   className=" text-red-600 font-semibold px-6 py-2 rounded-full hover:opacity-90 transition shadow-md cursor-pointer"

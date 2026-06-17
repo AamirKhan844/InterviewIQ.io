@@ -5,7 +5,7 @@ import { setUserData } from "../redux/userSlice";
 import { BsRobot, BsCoin } from "react-icons/bs";
 import { HiOutlineLogout } from "react-icons/hi";
 import { FaUserAstronaut } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
 import axios from "axios";
 import AuthMode from "./AuthMode";
@@ -109,13 +109,15 @@ const Navbar = () => {
                   <p className="text-md text-blue-600 tracking-wide ">
                     {userData?.user.name}
                   </p>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileFocus={{ scale: 1.03 }}
-                    className="w-full bg-black text-white  rounded-lg p-2 mb-2 cursor-pointer"
-                  >
-                    Interview History
-                  </motion.button>
+                  <Link to={"/history"}>
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileFocus={{ scale: 1.03 }}
+                      className="w-full bg-black text-white  rounded-lg p-2 mb-2 cursor-pointer"
+                    >
+                      Interview History
+                    </motion.button>
+                  </Link>
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileFocus={{ scale: 1.03 }}

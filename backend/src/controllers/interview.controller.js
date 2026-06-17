@@ -195,98 +195,235 @@ export const generateQuestions = async (req, res) => {
   }
 };
 
+// export const submitAnswer = async (req, res) => {
+//   try {
+//     const { interviewId, questionIndex, answer, timeTaken } = req.body;
+//     const interview = await Interview.findById(interviewId);
+//     const question = interview.questions[questionIndex];
+//     if (!answer) {
+//       question.score = 0;
+//       question.feedback = "You did not submit an answer";
+//       question.answer = "";
+//       await interview.save();
+//     }
+//     res.json({
+//       feedback: question.feedback,
+//     });
+//     if (timeTaken > question.timeLimit) {
+//       question.score = 0;
+//       question.feedback = "Time Limit Exceed. Question not evaluated";
+//       await Interview.save();
+//     }
+//     return res.json({
+//       feedback: question.feedback,
+//     });
+//     const messages = [
+//       {
+//         role: "system",
+//         content: `
+//         You are a professional human interviewer evaluating a candiadte's answer in real interview.
+
+//         Evaluate narturally and fairly like a real person would.
+
+//         Score the answer in these areas (0 to 10):
+
+//         1. Confidence - Does the answer sound, clear , confident and  well presented?
+//         2. Comminication - Is the  Language simple, clear, and Easy to understand?
+//         3. Correctness - Is  the answer accurate,  relevant and complete?
+
+//         Rules:
+//         1. Be Realistic and unbiased.
+//         2. Do not give Random  high Scores.
+//         3. If the answer is weak, score low.
+//         4. If the answer is  strong and Detailed, score  high.
+//         5.  Consider clarity, Structure and relevance
+
+//         Calculate:
+//         finalScore= average of confidence, communication, and correctness (rounded to nearest whole Number).
+
+//         Feeback Rules:
+//         - Write Natural human feedback.
+//         - 10 to 15 words only.
+//         - Sound like real Interview Feedback.
+//         - Can Suggest improvement if needed.
+//         - DO not repeat the Question.
+//         - Do not explain Scoring.
+//         - Keep tone professional and honest.
+
+//         Return only Valid json in this format:
+//       {
+//         "confidence":number,
+//         "communication":number,
+//         "correctness":number,
+//         "finalScore":number,
+//         "feedback":"short human feedback"
+//       }
+//         `,
+//       },
+//       {
+//         role: "user",
+//         content: `
+//         Question :${question.question}
+//         Answer:${answer}
+//         `,
+//       },
+//     ];
+//     const aiResponse = await askAi(messages);
+//     const cleanResponse = aiResponse
+//       .replace(/```json/g, "")
+//       .replace(/```/g, "")
+//       .trim();
+
+//     const parsed = JSON.parse(cleanResponse);
+//     console.log(parsed);
+//     question.answer = answer;
+//     question.confidence = parsed.confidence;
+//     question.communication = parsed.communication;
+//     question.correctness = parsed.correctness;
+//     question.score = parsed.finalScore;
+//     question.feedback = parsed.feedback;
+//     await interview.save();
+//     return res.status(200).json({
+//       feedback: parsed.feedback,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: `failed to submit answer ${error}`,
+//     });
+//   }
+// };
+
 export const submitAnswer = async (req, res) => {
   try {
     const { interviewId, questionIndex, answer, timeTaken } = req.body;
+
     const interview = await Interview.findById(interviewId);
+
+    if (!interview) {
+      return res.status(404).json({
+        success: false,
+        message: "Interview not found",
+      });
+    }
+
     const question = interview.questions[questionIndex];
-    if (!answer) {
+
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    // Empty answer
+    if (!answer || answer.trim() === "") {
       question.score = 0;
+      question.confidence = 0;
+      question.communication = 0;
+      question.correctness = 0;
       question.feedback = "You did not submit an answer";
       question.answer = "";
+
       await interview.save();
+
+      return res.status(200).json({
+        success: true,
+        feedback: question.feedback,
+      });
     }
-    return res.json({
-      feedback: question.feedback,
-    });
+
+    // Time limit exceeded
     if (timeTaken > question.timeLimit) {
       question.score = 0;
-      question.feedback = "Time Limit Exceed. Question not evaluated";
-      await Interview.save();
+      question.confidence = 0;
+      question.communication = 0;
+      question.correctness = 0;
+      question.feedback = "Time limit exceeded. Question not evaluated.";
+      question.answer = answer;
+
+      await interview.save();
+
+      return res.status(200).json({
+        success: true,
+        feedback: question.feedback,
+      });
     }
-    return res.json({
-      feedback: question.feedback,
-    });
+
+    // AI Evaluation
     const messages = [
       {
         role: "system",
         content: `
-        You are a professional human interviewer evaluating a candiadte's answer in real interview.
+You are a professional human interviewer evaluating a candidate's answer.
 
-        Evaluate narturally and fairly like a real person would.
+Evaluate on a scale of 0-10:
 
-        Score the answer in these areas (0 to 10):
+1. Confidence
+2. Communication
+3. Correctness
 
-        1. Confidence - Does the answer sound, clear , confident and  well presented?
-        2. Comminication - Is the  Language simple, clear, and Easy to understand?
-        3. Correctness - Is  the answer accurate,  relevant and complete?
+Calculate:
+finalScore = average of confidence, communication and correctness.
 
-        Rules:
-        1. Be Realistic and unbiased.
-        2. Do not give Random  high Scores.
-        3. If the answer is weak, score low.
-        4. If the answer is  strong and Detailed, score  high.
-        5.  Consider clarity, Structure and relevance
+Return ONLY valid JSON:
 
-        Calculate:
-        finalScore= average of confidence, communication, and correctness (rounded to nearest whole Number).
-
-        Feeback Rules:
-        - Write Natural human feedback.
-        - 10 to 15 words only.
-        - Sound like real Interview Feedback.
-        - Can Suggest improvement if needed.
-        - DO not repeat the Question.
-        - Do not explain Scoring.
-        - Keep tone professional and honest.
-
-        Return only Valid json in this format:
-      {
-        "confidence":number,
-        "communication":number,
-        "correctness":number,
-        "finalScore":number,
-        "feedback":"short human feedback"
-      }
+{
+  "confidence": number,
+  "communication": number,
+  "correctness": number,
+  "finalScore": number,
+  "feedback": "short human feedback"
+}
         `,
       },
       {
         role: "user",
         content: `
-        Question :${question.question}
-        Answer:${answer} 
+Question: ${question.question}
+
+Answer: ${answer}
         `,
       },
     ];
+
     const aiResponse = await askAi(messages);
-    const parsed = JSON.parse(aiResponse);
+
+    console.log("Raw AI Response:", aiResponse);
+
+    const cleanResponse = aiResponse
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const parsed = JSON.parse(cleanResponse);
+
+    console.log("Parsed Response:", parsed);
+
     question.answer = answer;
-    question.confidence = parsed.confidence;
-    question.communication = parsed.communication;
-    question.correctness = parsed.correctness;
-    question.score = parsed.score;
-    question.feedback = parsed.feedback;
+    question.confidence = Number(parsed.confidence) || 0;
+    question.communication = Number(parsed.communication) || 0;
+    question.correctness = Number(parsed.correctness) || 0;
+    question.score = Number(parsed.finalScore) || 0;
+    question.feedback = parsed.feedback || "";
+
     await interview.save();
+
+    console.log("Saved Question:", JSON.stringify(question, null, 2));
+
     return res.status(200).json({
-      feedback: parsed.feedback,
+      success: true,
+      feedback: question.feedback,
+      score: question.score,
     });
   } catch (error) {
+    console.error("Submit Answer Error:", error);
+
     return res.status(500).json({
-      message: `failed to submit answer ${error}`,
+      success: false,
+      message: `Failed to submit answer: ${error.message}`,
     });
   }
 };
-
 export const finishInterview = async (req, res) => {
   try {
     const { interviewId } = req.body;
@@ -336,6 +473,168 @@ export const finishInterview = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// export const getMyIntreviews = async (req, res) => {
+//   try {
+//     const interviews = await Interview.find({ userId: req.userId })
+//       .sort({
+//         createdAt: -1,
+//       })
+//       .select("role experience mode finalScore status createdAt");
+//     console.log(interviews);
+//     return res.status(200).json({
+//       intreviews,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: `failed to find current user Interview ${error}`,
+//     });
+//   }
+// };
+
+export const getMyIntreviews = async (req, res) => {
+  try {
+    console.log("User ID:", req.userId);
+
+    const interviews = await Interview.find({
+      userId: req.userId,
+    })
+      .sort({ createdAt: -1 })
+      .select("role experience mode finalScore status createdAt");
+
+    // console.log("Found Interviews:", interviews);
+
+    return res.status(200).json({
+      success: true,
+      interviews,
+    });
+  } catch (error) {
+    console.error("GET INTERVIEWS ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+// export const getInterviewReport = async (req, res) => {
+//   try {
+//     const interview = await Intreview.findById(req.params.id);
+//     console.log(interview);
+//     if (!interview) {
+//       return res.status(404).json({
+//         message: "Intreview not found",
+//         success: false,
+//       });
+//     }
+//     const totalQuestions = interview.questions.length;
+//     let totalConfidence = 0;
+//     let totalCorrectness = 0;
+//     let totalCommunication = 0;
+//     interview.questions.forEach((q) => {
+//       totalConfidence += q.confidence || 0;
+//       totalCommunication += q.communication || 0;
+//       totalCorrectness += q.correctness || 0;
+//     });
+//     const finalScore = totalQuestions ? totalScore / totalQuestions : 0;
+//     const avgConfidence = totalQuestions ? totalConfidence / totalQuestions : 0;
+//     const avgCommunication = totalQuestions
+//       ? totalCommunication / totalQuestions
+//       : 0;
+//     const avgCorrectness = totalQuestions
+//       ? totalCorrectness / totalQuestions
+//       : 0;
+//     interview.finalScore = finalScore;
+//     interview.status = "completed";
+//     await interview.save();
+//     return res.status(200).json({
+//       finalScore: Number(finalScore.toFixed(1)),
+//       confidence: Number(avgConfidence.toFixed(1)),
+//       correctness: Number(avgCorrectness.toFixed(1)),
+//       comminication: Number(avgCommunication.toFixed(1)),
+//       questionWiseScore: interview.questions.map((q) => ({
+//         question: q.question,
+//         score: q.score || 0,
+//         correctness: q.correctness || 0,
+//         feedback: q.feedback || "",
+//         communication: q.communication || 0,
+//         confidence: q.confidence || 0,
+//       })),
+//     });
+//   } catch (error) {
+//     // console.log( )
+//     return res.status(500).json({
+//       message: `failed to find current Interview ${error.message}`,
+//     });
+//   }
+// };
+
+export const getInterviewReport = async (req, res) => {
+  try {
+    const interview = await Interview.findById(req.params.id);
+
+    if (!interview) {
+      return res.status(404).json({
+        message: "Interview not found",
+        success: false,
+      });
+    }
+
+    const totalQuestions = interview.questions?.length || 0;
+
+    let totalScore = 0;
+    let totalConfidence = 0;
+    let totalCorrectness = 0;
+    let totalCommunication = 0;
+
+    interview.questions.forEach((q) => {
+      totalScore += q.score || 0;
+      totalConfidence += q.confidence || 0;
+      totalCommunication += q.communication || 0;
+      totalCorrectness += q.correctness || 0;
+    });
+
+    const finalScore = totalQuestions ? totalScore / totalQuestions : 0;
+
+    const avgConfidence = totalQuestions ? totalConfidence / totalQuestions : 0;
+
+    const avgCommunication = totalQuestions
+      ? totalCommunication / totalQuestions
+      : 0;
+
+    const avgCorrectness = totalQuestions
+      ? totalCorrectness / totalQuestions
+      : 0;
+
+    interview.finalScore = finalScore;
+    interview.status = "Completed";
+
+    await interview.save();
+
+    return res.status(200).json({
+      success: true,
+      finalScore: Number(finalScore.toFixed(1)),
+      confidence: Number(avgConfidence.toFixed(1)),
+      correctness: Number(avgCorrectness.toFixed(1)),
+      communication: Number(avgCommunication.toFixed(1)),
+      questionWiseScore: interview.questions.map((q) => ({
+        question: q.question,
+        score: q.score || 0,
+        correctness: q.correctness || 0,
+        feedback: q.feedback || "",
+        communication: q.communication || 0,
+        confidence: q.confidence || 0,
+      })),
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
       message: error.message,
     });
   }

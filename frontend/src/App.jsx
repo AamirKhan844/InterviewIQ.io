@@ -7,6 +7,9 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "./redux/userSlice";
 import IntreviewPage from "./pages/IntreviewPage";
+import InterviewHistory from "./pages/InterviewHistory";
+import InterviewReport from "./pages/InterviewReport";
+import Pricing from "./components/Pricing";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +36,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />}></Route>
         <Route path="/interview" element={<IntreviewPage />}></Route>
+        <Route path="/history" element={<InterviewHistory />}></Route>
+        <Route path="/report/:id" element={<InterviewReport />}></Route>
+        <Route path="/pricing" element={<Pricing />}></Route>
       </Routes>
     </>
   );
