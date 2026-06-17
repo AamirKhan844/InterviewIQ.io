@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URI,
+    origin: "https://interviewiq-io-client.onrender.com",
     credentials: true,
   }),
 );
